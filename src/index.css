@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 210 20% 98%;
+    --foreground: 215 25% 15%;
+
+    /* Card colors */
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    /* Popover colors */
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary - Blue (Eau) */
+    --primary: 205 87% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 205 87% 38%;
+
+    /* Secondary - Electric Yellow/Orange */
+    --secondary: 43 96% 56%;
+    --secondary-foreground: 215 25% 15%;
+    --secondary-hover: 43 96% 48%;
+
+    /* Status colors */
+    --status-normal: 142 71% 45%;
+    --status-incident: 0 84% 60%;
+    --status-scheduled: 43 96% 56%;
+
+    /* Muted */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent */
+    --accent: 205 87% 92%;
+    --accent-foreground: 205 87% 45%;
+
+    /* Destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border and input */
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 205 87% 45%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(205 87% 45%), hsl(205 87% 60%));
+    --gradient-hero: linear-gradient(135deg, hsl(205 87% 45%), hsl(205 87% 35%));
+  }
+
+  .dark {
+    /* Base colors */
+    --background: 215 28% 12%;
+    --foreground: 210 20% 98%;
+
+    /* Card colors */
+    --card: 215 28% 17%;
+    --card-foreground: 210 20% 98%;
+
+    /* Popover colors */
+    --popover: 215 28% 17%;
+    --popover-foreground: 210 20% 98%;
+
+    /* Primary - Blue (Eau) */
+    --primary: 205 87% 55%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 205 87% 48%;
+
+    /* Secondary - Electric Yellow/Orange */
+    --secondary: 43 96% 60%;
+    --secondary-foreground: 215 25% 15%;
+    --secondary-hover: 43 96% 52%;
+
+    /* Status colors */
+    --status-normal: 142 71% 50%;
+    --status-incident: 0 84% 65%;
+    --status-scheduled: 43 96% 60%;
+
+    /* Muted */
+    --muted: 215 28% 22%;
+    --muted-foreground: 215 20% 65%;
+
+    /* Accent */
+    --accent: 205 87% 25%;
+    --accent-foreground: 205 87% 80%;
+
+    /* Destructive */
+    --destructive: 0 84% 65%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border and input */
+    --border: 215 28% 22%;
+    --input: 215 28% 22%;
+    --ring: 205 87% 55%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(205 87% 55%), hsl(205 87% 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(205 87% 55%), hsl(205 87% 45%));
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
