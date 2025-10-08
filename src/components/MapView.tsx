@@ -7,6 +7,9 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { Incident, IncidentStatus, ServiceType } from '@/types/incident';
+import { generateMockIncidents } from '@/lib/mock-data';
+
+const USE_MOCK_DATA = true; // Set to true to use mock data
 
 // Fix for default marker icon issue with Webpack
 delete L.Icon.Default.prototype._getIconUrl;
@@ -21,52 +24,60 @@ export const MapView = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchIncidents();
-    
-    // Subscribe to realtime incident updates
-    const channel = supabase
-      .channel('incidents-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'incidents'
-        },
-        () => {
-          fetchIncidents();
+    useEffect(() => {
+      fetchIncidents();
+      
+      // Only subscribe to realtime changes if not using mock data
+      if (!USE_MOCK_DATA) {
+        const channel = supabase
+          .channel('incidents-changes')
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'incidents'
+            },
+            () => {
+              fetchIncidents();
+            }
+          )
+          .subscribe();
+  
+        return () => {
+          supabase.removeChannel(channel);
+        };
+      }
+    }, []);
+  
+    const fetchIncidents = async () => {
+      setLoading(true);
+      if (USE_MOCK_DATA) {
+        // Simulate network delay
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const mockData = generateMockIncidents(20).filter(inc => inc.latitude && inc.longitude);
+        setIncidents(mockData);
+      } else {
+        const { data, error } = await supabase
+          .from("incidents")
+          .select("*, latitude, longitude")
+          .in("status", ["ongoing", "scheduled"])
+          .not("latitude", "is", null)
+          .not("longitude", "is", null);
+  
+        if (error) {
+          toast({
+            title: "Erreur",
+            description: "Impossible de charger les incidents",
+            variant: "destructive",
+          });
+          return;
         }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
+  
+        setIncidents(data || []);
+      }
+      setLoading(false);
     };
-  }, []);
-
-  const fetchIncidents = async () => {
-    setLoading(true);
-    const { data, error } = await supabase
-      .from("incidents")
-      .select("*, latitude, longitude")
-      .in("status", ["ongoing", "scheduled"])
-      .not("latitude", "is", null)
-      .not("longitude", "is", null);
-
-    if (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de charger les incidents",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIncidents(data || []);
-    setLoading(false);
-  };
-
   if (loading) {
     return (
       <Card className="w-full h-[600px] flex items-center justify-center">
